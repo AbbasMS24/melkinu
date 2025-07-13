@@ -13,12 +13,17 @@ use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
 {
+    public function tr_generator(){
+        $last_tr = MelkinouLandInfoModel::orderBy("id", "desc")->first();
+        $code = $last_tr ? $last_tr + 1 : 1000;
+        return $code;
+    }
     public function register(Request $request){
         try{
             DB::beginTransaction();
 
             $data = $request->all();
-            $data['tr_code'] = "9999"; //must be replaced with the real one
+            $data['tr_code'] = $this->tr_generator(); //must be replaced with the real one
             $data['date'] = "9999";
             $data['time'] = "9999";
             $data['ip_address'] = $request->ip();
