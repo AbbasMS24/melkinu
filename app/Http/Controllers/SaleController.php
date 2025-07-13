@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\MelkinouLandInfoModel;
 use App\Models\MelkinouTechInfoModel;
 use App\Models\MelkinouSaleInfoModel;
+use App\Models\MelkinouSalingAccessLogs;
 use Illuminate\Support\Facades\DB;
 
 class SaleController extends Controller
@@ -23,16 +24,32 @@ class SaleController extends Controller
             $data['ip_address'] = $request->ip();
             $data['user_agent'] = $request->userAgent();
             //upload natinoal_card script
-            MelkinouLandInfoModel::create($data);
-            MelkinouTechInfoModel::create($data);
-            MelkinouSaleInfoModel::create($data);
+            if($request->hasFile("national_card")){
+                $file = $request->file("national_card");
+                if($file->storeAs("sale/national_card", $data['tr_code'], $file->getClientOriginalExtension())){
+                    MelkinouLandInfoModel::create($data);
+                    MelkinouTechInfoModel::create($data);
+                    MelkinouSaleInfoModel::create($data);
+                    MelkinouSalingAccessLogs::create($data);
 
-            DB::commit();
+                    DB::commit();
+
+                    return response()->json([
+                        "msg" => "inserted",
+                        "statuscode" => 201
+                    ], 201);
+                }
+                return response()->json([
+                    "msg" => "could not upload national card id",
+                    "statuscode" => 400
+                ], 400);
+            }
 
             return response()->json([
-                "msg" => "inserted",
-                "statuscode" => 201
-            ], 201);
+                "msg" => "file not found to upload",
+                "statuscode" => 404
+            ], 404);
+
         }catch(\Exception $e){
             DB::rollBack();
             return response()->json([
