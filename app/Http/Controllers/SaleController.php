@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MelkinouReferLogsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -10,6 +11,8 @@ use App\Models\MelkinouTechInfoModel;
 use App\Models\MelkinouSaleInfoModel;
 use App\Models\MelkinouSalingAccessLogs;
 use Illuminate\Support\Facades\DB;
+
+require_once __DIR__ . "../../jdf/jdf.php";
 
 class SaleController extends Controller
 {
@@ -24,8 +27,8 @@ class SaleController extends Controller
 
             $data = $request->all();
             $data['tr_code'] = $this->tr_generator(); //must be replaced with the real one
-            $data['date'] = "9999";
-            $data['time'] = "9999";
+            $data['date'] = jdate("Y/m/d");
+            $data['time'] = jdate("H:i:s");
             $data['ip_address'] = $request->ip();
             $data['user_agent'] = $request->userAgent();
             //upload natinoal_card script
@@ -83,6 +86,31 @@ class SaleController extends Controller
                 "statuscode" => 200
             ], 200);
         }catch (\Exception $e){
+            return response()->json([
+                "error" => $e->getMessage() . " at line " . $e->getLine(),
+                "statuscode" => 500
+            ], 500);
+        }
+    }
+
+    public function refer(Request $request){
+        try{
+            $data = $request->all();
+            $data['date'] = jdate("Y/m/d");
+            $data['time'] = jdate("H:i:s");
+
+            $inserted = MelkinouReferLogsModel::create($data);
+            if(!$inserted){
+                return response()->json([
+                    "msg" => "could not be inserted",
+                    "statuscode" => 400
+                ], 400);
+            }
+            return response()->json([
+                "msg" => "referred successfully",
+                "statuscode" => 201
+            ], 201);
+        }catch(\Exception $e){
             return response()->json([
                 "error" => $e->getMessage() . " at line " . $e->getLine(),
                 "statuscode" => 500
