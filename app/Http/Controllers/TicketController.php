@@ -43,17 +43,17 @@ class TicketController extends Controller
                 ]);
 
                 // ثبت پیام در workflow
-                TicketWorkflow::create([
+                TicketWorkflow::create(array(
                     'tr_code' => $tr_code,
                     'sender' => $request->sender,
                     'receptor' => $request->receptor,
                     'date' => now()->toDateString(),
                     'time' => now()->toTimeString(),
                     'title' => $request->title,
-                    'content' => $request->content,
+                    'content' => $request->text_content,
                     'attachment' => $request->attachment,
                     'station' => $request->station,
-                ]);
+                ));
 
                 return response()->json([
                     'message' => 'تیکت با موفقیت ثبت شد',
@@ -82,7 +82,7 @@ class TicketController extends Controller
             'date' => now()->toDateString(),
             'time' => now()->toTimeString(),
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => $request->text_content,
             'attachment' => $request->attachment,
             'station' => $request->station,
         ]);
@@ -108,6 +108,6 @@ class TicketController extends Controller
             "data"=> $info,
             "statuscode"=> 200
         ], 200);
-        
+
     }
 }
