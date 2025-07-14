@@ -110,4 +110,20 @@ class TicketController extends Controller
         ], 200);
 
     }
+
+    public function updateStatus(Request $request){
+        $updated = TicketStatus::where("tr_code", $request->tr_code)->update($request->all());
+
+        if(!$updated){
+           return response()->json([
+               "msg" => "could not be updated",
+               "statuscode" => "400"
+           ], 400);
+        }
+
+        return response()->json([
+            "msg" => "updated",
+            "statuscode" => 200
+        ], 200);
+    }
 }
