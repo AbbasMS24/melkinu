@@ -14,7 +14,7 @@
         Route::post("register", [SaleController::class, "register"]);
         Route::get("saleRequests", [SaleController::class, 'fetchData']);
         Route::patch("updateStatus", [SaleController::class, "updateStatus"]);
-        Route::delete("saleRefer", [SaleController::class, "refer"]);
+        Route::post("saleRefer", [SaleController::class, "refer"]);
     });
 
     Route::prefix("regions")->group(function(){

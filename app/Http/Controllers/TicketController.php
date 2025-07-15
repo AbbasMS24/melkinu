@@ -16,7 +16,7 @@ class TicketController extends Controller
             'receptor' => 'nullable|string',
             'title' => 'required|string',
             'content' => 'required|string',
-            'station' => 'nullable|string',
+            'status' => 'nullable|string',
             'attachment' => 'nullable|file|mimes:jpg,png,pdf',
         ]);
 
@@ -52,7 +52,7 @@ class TicketController extends Controller
                     'title' => $request->title,
                     'content' => $request->text_content,
                     'attachment' => $request->attachment,
-                    'station' => $request->station,
+                    'status' => $request->station,
                 ));
 
                 return response()->json([
@@ -84,7 +84,7 @@ class TicketController extends Controller
             'title' => $request->title,
             'content' => $request->text_content,
             'attachment' => $request->attachment,
-            'station' => $request->station,
+            'status' => $request->station,
         ]);
 
         return response()->json([

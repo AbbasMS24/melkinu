@@ -13,7 +13,6 @@ class ProvinceCitiesController extends Controller
         try{
             $data = $request->all();
             DB::beginTransaction();
-            ProvinceCitiesController::create($data);
                 MelkinouProvinceCitiesModel::create($data);
                 MelkinouRegionsModel::create($data);
             DB::commit();
